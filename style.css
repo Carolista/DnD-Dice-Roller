@@ -1,0 +1,179 @@
+html, body {
+	font-family: 'Quando', serif;
+  height: 100%;
+  width: 100%;
+}
+
+body {
+	background-color: #333;
+	background-image: url('https://drive.google.com/uc?export=view&id=1t3d-LK-_mQ7qgjVTQWpbZE85HSyesSwW');
+	background-position: top left;
+	color: ghostwhite;
+}
+
+div {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.container {
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	height: 100%;
+  width: 100%;
+	animation: fade-in 2.5s ease-in;
+}
+
+#title-area {
+	background-image: url('https://drive.google.com/uc?export=view&id=16rv9c5Md80QcWUmbncTo3remSHeNJMgK');
+	height: 100px;
+	width: 200px;
+	margin-bottom: 10px;
+	border-radius: 6px;
+}
+
+#form-area {
+	width: 180px;
+	padding: 8px;
+	border: 2px solid ghostwhite;
+	border-radius: 6px;	
+}
+
+.input-area {
+	font-size: 1.2rem;
+	flex-direction: column;
+	padding: 10px;
+}
+
+.num-type {
+	flex-direction: row;
+	gap: 10px;
+}
+
+.button-row {
+	flex-direction: row;
+	padding: 15px 0px;
+	gap: 10px;
+}
+
+label {
+	margin-bottom: 10px;
+}
+
+input, select {
+	color: #333;
+	font-size: 1.05rem;
+}
+
+input, select, button {
+	font-family: 'Quando', serif;
+	height: 24px;
+	outline: none;
+	border: 1px solid transparent;
+	border-radius: 4px;	
+	cursor: pointer;
+}
+
+input {
+	width: 64px;
+}
+
+select {
+	width: 72px;
+}
+
+.wide {
+	width: 160px;
+}
+
+button {
+	color: white;
+	font-size: 0.95rem;
+	text-transform: uppercase;
+}
+button:hover {
+	border: 1px solid ghostwhite;
+}
+
+#roll {
+	background-color: #bd3728;
+}
+#roll:hover {
+	background-color: #db4939
+}
+
+#reset {
+  background-color: rgba(0, 0, 0, 0.5);
+	border: 1px solid #888;
+}
+#reset:hover {
+  background-color: rgba(0, 0, 0, 0.3);
+	border: 1px solid ghostwhite;
+}
+
+#dice-area {
+	margin: 10px 0px;
+}
+
+#d20 {
+	display: block;
+}
+
+#d12, #d10, #d8, #d6, #d4 {
+	display: none;
+}
+
+#result-area {
+	background-color: rgba(0, 0, 0, 0.3);
+	font-size: 60px;
+	width: 180px;
+	height: 100px;
+	padding: 8px;
+	margin-top: 10px;
+	border: 2px solid ghostwhite;
+	border-radius: 6px;
+}
+
+#single-total-area {
+	display: block;
+}
+
+#total {
+	opacity: 0.2;
+}
+
+#double-total-area {
+	display: none;
+}
+
+#left-total {
+	opacity: 0.2;
+}
+
+#divider {
+	opacity: 0.5;
+}
+
+#right-total {
+	opacity: 0.2;
+}
+
+@keyframes fade-in {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
+}
+
+@keyframes spin {
+	0% {
+			transform: rotate(0deg);
+	}
+	100% {
+			transform: rotate(720deg);
+	}
+}
