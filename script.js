@@ -1,38 +1,6 @@
-let dice = {
-	d20: { 
-		value: 20, 
-		label: 'D20', 
-		image: 'https://drive.google.com/thumbnail?size=400&id=1Cdv19qd-HBZSnrfe2hkunU3bsPZ7VPht',
-	},
-	d12: { 
-		value: 12, 
-		label: 'D12', 
-		image: 'https://drive.google.com/thumbnail?size=400&id=1gRMfOlt98M5dmc-Ex5enZRFy7Bkkr9ta',
-	},
-	d10: { 
-		value: 10, 
-		label: 'D10', 
-		image: 'https://drive.google.com/thumbnail?size=400&id=1iwbOiPeNMREcQswWeLZ-dDJXzoaozVum',
-	},
-	d8: { 
-		value: 8, 
-		label: 'D8', 
-		image: 'https://drive.google.com/thumbnail?size=400&id=1LrjniIM1RG4u8as6hT5Pa-nS_1z0Bt5z',
-	},
-	d6: { 
-		value: 6, 
-		label: 'D6', 
-		image: 'https://drive.google.com/thumbnail?size=400&id=1KABrJFwctJG8JlLhL8ZXYIjj4-a2Gd64',
-	},
-	d4: { 
-		value: 4, 
-		label: 'D4', 
-		image: 'https://drive.google.com/thumbnail?size=400&id=1TywBsbvDZ8IMiz_7UNQJJS88FTd2kDTN',
-	},
-};
+import dice from './dice.js';
 
 window.addEventListener('load', () => {
-
 	const numDiceInput = document.getElementById('num-dice-input');
 	const dieTypeInput = document.getElementById('die-type-input');
 	const modeInput = document.getElementById('mode-input');
@@ -48,17 +16,14 @@ window.addEventListener('load', () => {
 	const divider = document.getElementById('divider');
 	const rightTotal = document.getElementById('right-total');
 
-	for (let i=1; i <=100; i++) {
+	for (let i = 1; i <= 100; i++) {
 		numDiceInput.innerHTML += `<option value=${i}>${i}</option>`;
 	}
 
-	for (die in dice) {
+	for (let die in dice) {
 		dieTypeInput.innerHTML += `<option value=${dice[die].value}>${dice[die].label}</option>`;
 		diceArea.innerHTML += `<img id="${die}" src='${dice[die].image}' height='80px' alt="${dice[die].label} die" />`;
 	}
-
-	numDiceInput.value = localStorage.getItem('numDice') || 1;
-	dieTypeInput.value = localStorage.getItem('dieType') || 20;
 
 	const d20 = document.getElementById('d20');
 	const d12 = document.getElementById('d12');
@@ -74,6 +39,12 @@ window.addEventListener('load', () => {
 	dice['d6'].obj = d6;
 	dice['d4'].obj = d4;
 
+	numDiceInput.value = Number(localStorage.getItem('numDice')) || 1;
+	dieTypeInput.value = Number(localStorage.getItem('dieType')) || 20;
+	modeInput.value = localStorage.getItem('mode') || 'normal';
+
+	changeDie(`d${dieTypeInput.value}`);
+
 	rollButton.addEventListener('click', event => {
 		event.preventDefault();
 		spinDie(dice[`d${dieTypeInput.value}`].obj);
@@ -81,7 +52,7 @@ window.addEventListener('load', () => {
 			total.style.opacity = 0;
 			setTimeout(() => {
 				total.innerHTML = getTotalValue(dieTypeInput.value, numDiceInput.value);
-				total.style.opacity = 1;						
+				total.style.opacity = 1;
 			}, 600);
 		} else {
 			leftTotal.style.opacity = 0;
@@ -94,7 +65,7 @@ window.addEventListener('load', () => {
 				rightTotal.innerHTML = rightValue;
 				divider.style.opacity = 0.5;
 				if (modeInput.value === 'advantage') {
-					if (leftTotal.innerHTML == Math.max(...[leftValue, rightValue])) {
+					if (leftTotal.innerHTML == Math.max(leftValue, rightValue)) {
 						leftTotal.style.opacity = 1;
 						rightTotal.style.opacity = 0.2;
 					} else {
@@ -102,14 +73,14 @@ window.addEventListener('load', () => {
 						rightTotal.style.opacity = 1;
 					}
 				} else {
-					if (leftTotal.innerHTML == Math.min(...[leftValue, rightValue])) {
+					if (leftTotal.innerHTML == Math.min(leftValue, rightValue)) {
 						leftTotal.style.opacity = 1;
 						rightTotal.style.opacity = 0.2;
 					} else {
 						leftTotal.style.opacity = 0.2;
 						rightTotal.style.opacity = 1;
-					}					
-				}			
+					}
+				}
 			}, 600);
 		}
 	});
@@ -121,26 +92,37 @@ window.addEventListener('load', () => {
 		modeInput.value = 'normal';
 		changeDie(`d20`);
 		resultArea.style.fontSize = getFontSize(1, 20, true);
-    resetTotals();
+		resetTotals();
 		singleTotalArea.style.display = 'block';
 		doubleTotalArea.style.display = 'none';
+        localStorage.setItem('numDice', 1);
+		localStorage.setItem('dieType', 20);
+		localStorage.setItem('mode', 'normal');
 	});
-	
-	document.addEventListener('input', (event) => {
+
+	document.addEventListener('input', event => {
 		event.preventDefault();
 		resetTotals();
 		let numDice = numDiceInput.value;
 		let dieType = dieTypeInput.value;
+		let mode = modeInput.value;
 		if (event.target === dieTypeInput) {
 			changeDie(`d${dieType}`);
 		}
-		resultArea.style.fontSize = getFontSize(numDice, dieType, modeInput.value === 'normal');
-		singleTotalArea.style.display = modeInput.value === 'normal' ? 'block' : 'none';
-		doubleTotalArea.style.display = modeInput.value === 'normal' ? 'none' : 'block';
+		resultArea.style.fontSize = getFontSize(
+			numDice,
+			dieType,
+			modeInput.value === 'normal'
+		);
+		singleTotalArea.style.display =
+			modeInput.value === 'normal' ? 'block' : 'none';
+		doubleTotalArea.style.display =
+			modeInput.value === 'normal' ? 'none' : 'block';
 		localStorage.setItem('numDice', numDice);
 		localStorage.setItem('dieType', dieType);
+		localStorage.setItem('mode', mode);
 	});
-	
+
 	function resetTotals() {
 		total.innerHTML = 0;
 		total.style.opacity = 0.2;
@@ -155,11 +137,11 @@ window.addEventListener('load', () => {
 		let spin = die.getAnimations()[0];
 		spin.finish();
 		spin.play();
-		die.style.animation = "none";
+		die.style.animation = 'none';
 	}
 
 	function changeDie(dieType) {
-		for (die in dice) {
+		for (let die in dice) {
 			dice[die].obj.style.display = die === dieType ? 'block' : 'none';
 		}
 	}
@@ -168,12 +150,12 @@ window.addEventListener('load', () => {
 function getFontSize(numDice, dieType, isNormal) {
 	let max = numDice * dieType;
 	if (isNormal || max < 10) {
-		return '60px';  
+		return '60px';
 	} else if (max < 200) {
 		return '42px';
 	} else if (max < 1000) {
 		return '32px';
-	} 
+	}
 	return '24px';
 }
 
@@ -183,7 +165,7 @@ function getRandomNum(max) {
 
 function getTotalValue(max, numDice) {
 	let total = 0;
-	for (let i=1; i <= numDice; i++) {
+	for (let i = 1; i <= numDice; i++) {
 		total += getRandomNum(max);
 	}
 	return total;

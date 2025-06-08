@@ -5,9 +5,11 @@ html, body {
 }
 
 body {
-	background-color: #333;
-	background-image: url('https://drive.google.com/uc?export=view&id=1t3d-LK-_mQ7qgjVTQWpbZE85HSyesSwW');
-	background-position: top left;
+	background: #333;
+    /* background-image: url('https://drive.google.com/thumbnail?size=200&id=1t3d-LK-_mQ7qgjVTQWpbZE85HSyesSwW'); */
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
 	color: ghostwhite;
 }
 
@@ -27,7 +29,7 @@ div {
 }
 
 #title-area {
-	background-image: url('https://drive.google.com/uc?export=view&id=16rv9c5Md80QcWUmbncTo3remSHeNJMgK');
+	background-image: url('https://drive.google.com/thumbnail?size=2000&id=16rv9c5Md80QcWUmbncTo3remSHeNJMgK');
 	height: 100px;
 	width: 200px;
 	margin-bottom: 10px;
