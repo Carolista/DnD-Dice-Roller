@@ -1,12 +1,16 @@
 import dice from './dice.js';
+import { getTotalValue, getFontSize } from './helpers.js';
 
 window.addEventListener('load', () => {
+
+    // Form Inputs
 	const numDiceInput = document.getElementById('num-dice-input');
 	const dieTypeInput = document.getElementById('die-type-input');
 	const modeInput = document.getElementById('mode-input');
 	const rollButton = document.getElementById('roll');
 	const resetButton = document.getElementById('reset');
 
+    // Containers & Wrappers
 	const diceArea = document.getElementById('dice-area');
 	const resultArea = document.getElementById('result-area');
 	const singleTotalArea = document.getElementById('single-total-area');
@@ -16,35 +20,58 @@ window.addEventListener('load', () => {
 	const divider = document.getElementById('divider');
 	const rightTotal = document.getElementById('right-total');
 
+    // Add options to number of dice dropdown menu
 	for (let i = 1; i <= 100; i++) {
 		numDiceInput.innerHTML += `<option value=${i}>${i}</option>`;
 	}
 
+    // Add options to die type dropdown menu and place images for each die type
 	for (let die in dice) {
 		dieTypeInput.innerHTML += `<option value=${dice[die].value}>${dice[die].label}</option>`;
 		diceArea.innerHTML += `<img id="${die}" src='${dice[die].image}' height='80px' alt="${dice[die].label} die" />`;
 	}
 
-	const d20 = document.getElementById('d20');
-	const d12 = document.getElementById('d12');
-	const d10 = document.getElementById('d10');
-	const d8 = document.getElementById('d8');
-	const d6 = document.getElementById('d6');
-	const d4 = document.getElementById('d4');
+    // Add references to each img element to imported dice object
+	dice['d20'].obj = document.getElementById('d20');
+	dice['d12'].obj = document.getElementById('d12');
+	dice['d10'].obj = document.getElementById('d10');
+	dice['d8'].obj = document.getElementById('d8');
+	dice['d6'].obj = document.getElementById('d6');
+	dice['d4'].obj = document.getElementById('d4');
 
-	dice['d20'].obj = d20;
-	dice['d12'].obj = d12;
-	dice['d10'].obj = d10;
-	dice['d8'].obj = d8;
-	dice['d6'].obj = d6;
-	dice['d4'].obj = d4;
-
+    // Set initial values of inputs and update image to match
 	numDiceInput.value = Number(localStorage.getItem('numDice')) || 1;
 	dieTypeInput.value = Number(localStorage.getItem('dieType')) || 20;
 	modeInput.value = localStorage.getItem('mode') || 'normal';
 
-	changeDie(`d${dieTypeInput.value}`);
+	changeDieImage(`d${dieTypeInput.value}`);
 
+    // Handle updates for any dropdown change
+    document.addEventListener('input', event => {
+        event.preventDefault();
+        resetTotals();
+        let numDice = numDiceInput.value;
+        let dieType = dieTypeInput.value;
+        let mode = modeInput.value;
+        localStorage.setItem('numDice', numDice);
+        localStorage.setItem('dieType', dieType);
+        localStorage.setItem('mode', mode);
+        if (event.target === dieTypeInput) {
+            changeDieImage(`d${dieType}`);
+        }
+        resultArea.style.fontSize = getFontSize(
+            numDice,
+            dieType,
+            modeInput.value === 'normal'
+        );
+        singleTotalArea.style.display =
+            modeInput.value === 'normal' ? 'block' : 'none';
+        doubleTotalArea.style.display =
+            modeInput.value === 'normal' ? 'none' : 'block';
+
+    });
+
+    // Handle click on ROLL button
 	rollButton.addEventListener('click', event => {
 		event.preventDefault();
 		spinDie(dice[`d${dieTypeInput.value}`].obj);
@@ -85,43 +112,23 @@ window.addEventListener('load', () => {
 		}
 	});
 
+    // Handle click on RESET button
 	resetButton.addEventListener('click', event => {
 		event.preventDefault();
-		numDiceInput.value = 1;
-		dieTypeInput.value = 20;
-		modeInput.value = 'normal';
-		changeDie(`d20`);
-		resultArea.style.fontSize = getFontSize(1, 20, true);
+        resetInputs();
 		resetTotals();
-		singleTotalArea.style.display = 'block';
-		doubleTotalArea.style.display = 'none';
-        localStorage.setItem('numDice', 1);
-		localStorage.setItem('dieType', 20);
-		localStorage.setItem('mode', 'normal');
+        resetDisplay();
+        changeDieImage('d20');
 	});
 
-	document.addEventListener('input', event => {
-		event.preventDefault();
-		resetTotals();
-		let numDice = numDiceInput.value;
-		let dieType = dieTypeInput.value;
-		let mode = modeInput.value;
-		if (event.target === dieTypeInput) {
-			changeDie(`d${dieType}`);
-		}
-		resultArea.style.fontSize = getFontSize(
-			numDice,
-			dieType,
-			modeInput.value === 'normal'
-		);
-		singleTotalArea.style.display =
-			modeInput.value === 'normal' ? 'block' : 'none';
-		doubleTotalArea.style.display =
-			modeInput.value === 'normal' ? 'none' : 'block';
-		localStorage.setItem('numDice', numDice);
-		localStorage.setItem('dieType', dieType);
-		localStorage.setItem('mode', mode);
-	});
+    function resetInputs() {
+        numDiceInput.value = 1;
+        dieTypeInput.value = 20;
+        modeInput.value = 'normal';
+        localStorage.setItem('numDice', 1);
+        localStorage.setItem('dieType', 20);
+        localStorage.setItem('mode', 'normal');
+    }
 
 	function resetTotals() {
 		total.innerHTML = 0;
@@ -130,8 +137,19 @@ window.addEventListener('load', () => {
 		leftTotal.style.opacity = 0.2;
 		rightTotal.innerHTML = 0;
 		rightTotal.style.opacity = 0.2;
+        resultArea.style.fontSize = getFontSize(1, 20, true);
+        singleTotalArea.style.display = 'block';
+        doubleTotalArea.style.display = 'none';
 	}
 
+    // Switch visible image to match current die type
+	function changeDieImage(dieType) {
+		for (let die in dice) {
+			dice[die].obj.style.display = die === dieType ? 'block' : 'none';
+		}
+	}
+
+    // Handle animation of die image when roll button is clicked
 	function spinDie(die) {
 		die.style.animation = 'spin 1s ease-out';
 		let spin = die.getAnimations()[0];
@@ -140,33 +158,4 @@ window.addEventListener('load', () => {
 		die.style.animation = 'none';
 	}
 
-	function changeDie(dieType) {
-		for (let die in dice) {
-			dice[die].obj.style.display = die === dieType ? 'block' : 'none';
-		}
-	}
 });
-
-function getFontSize(numDice, dieType, isNormal) {
-	let max = numDice * dieType;
-	if (isNormal || max < 10) {
-		return '60px';
-	} else if (max < 200) {
-		return '42px';
-	} else if (max < 1000) {
-		return '32px';
-	}
-	return '24px';
-}
-
-function getRandomNum(max) {
-	return Math.ceil(Math.random() * max);
-}
-
-function getTotalValue(max, numDice) {
-	let total = 0;
-	for (let i = 1; i <= numDice; i++) {
-		total += getRandomNum(max);
-	}
-	return total;
-}
