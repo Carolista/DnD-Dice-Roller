@@ -57,8 +57,8 @@ window.addEventListener('load', () => {
 		diceArea.innerHTML += `<img id="${die}" src='${dice[die].image}' height='80px' alt="${dice[die].label} die" />`;
 	}
 
-	numDiceInput.value = localStorage.get('numDice') || 1;
-	dieTypeInput.value = localStorage.get('dieType') || 20;
+	numDiceInput.value = localStorage.getItem('numDice') || 1;
+	dieTypeInput.value = localStorage.getItem('dieType') || 20;
 
 	const d20 = document.getElementById('d20');
 	const d12 = document.getElementById('d12');
