@@ -6,10 +6,10 @@ html, body {
 
 body {
 	background: #333;
-    /* background-image: url('https://drive.google.com/thumbnail?size=200&id=1t3d-LK-_mQ7qgjVTQWpbZE85HSyesSwW'); */
+    background-image: url('./images/bkg.png');
     background-size: cover;
     background-repeat: no-repeat;
-    background-position: center;
+    background-position: top left;
 	color: ghostwhite;
 }
 
@@ -24,12 +24,12 @@ div {
 	justify-content: center;
 	align-items: center;
 	height: 100%;
-  width: 100%;
+    width: 100%;
 	animation: fade-in 2.5s ease-in;
 }
 
 #title-area {
-	background-image: url('https://drive.google.com/thumbnail?size=2000&id=16rv9c5Md80QcWUmbncTo3remSHeNJMgK');
+	background-image: url('./images/dnd-dice-roller-logo.png');
 	height: 100px;
 	width: 200px;
 	margin-bottom: 10px;
@@ -37,6 +37,7 @@ div {
 }
 
 #form-area {
+    background-color: rgb(0, 0, 0, 0.7);
 	width: 180px;
 	padding: 8px;
 	border: 2px solid ghostwhite;
@@ -128,7 +129,7 @@ button:hover {
 }
 
 #result-area {
-	background-color: rgba(0, 0, 0, 0.3);
+	background-color: rgba(0, 0, 0, 0.7);
 	font-size: 60px;
 	width: 180px;
 	height: 100px;
