@@ -1,3 +1,36 @@
+let dice = {
+	d20: { 
+		value: 20, 
+		label: 'D20', 
+		image: 'https://drive.google.com/thumbnail?size=400&id=1Cdv19qd-HBZSnrfe2hkunU3bsPZ7VPht',
+	},
+	d12: { 
+		value: 12, 
+		label: 'D12', 
+		image: 'https://drive.google.com/thumbnail?size=400&id=1gRMfOlt98M5dmc-Ex5enZRFy7Bkkr9ta',
+	},
+	d10: { 
+		value: 10, 
+		label: 'D10', 
+		image: 'https://drive.google.com/thumbnail?size=400&id=1iwbOiPeNMREcQswWeLZ-dDJXzoaozVum',
+	},
+	d8: { 
+		value: 8, 
+		label: 'D8', 
+		image: 'https://drive.google.com/thumbnail?size=400&id=1LrjniIM1RG4u8as6hT5Pa-nS_1z0Bt5z',
+	},
+	d6: { 
+		value: 6, 
+		label: 'D6', 
+		image: 'https://drive.google.com/thumbnail?size=400&id=1KABrJFwctJG8JlLhL8ZXYIjj4-a2Gd64',
+	},
+	d4: { 
+		value: 4, 
+		label: 'D4', 
+		image: 'https://drive.google.com/thumbnail?size=400&id=1TywBsbvDZ8IMiz_7UNQJJS88FTd2kDTN',
+	},
+};
+
 window.addEventListener('load', () => {
 
 	const numDiceInput = document.getElementById('num-dice-input');
@@ -18,44 +51,14 @@ window.addEventListener('load', () => {
 	for (let i=1; i <=100; i++) {
 		numDiceInput.innerHTML += `<option value=${i}>${i}</option>`;
 	}
-	
-	let dice = {
-		d20: { 
-			value: 20, 
-			label: 'D20', 
-			image: 'https://drive.google.com/thumbnail?size=400&id=1Cdv19qd-HBZSnrfe2hkunU3bsPZ7VPht',
-		},
-		d12: { 
-			value: 12, 
-			label: 'D12', 
-			image: 'https://drive.google.com/thumbnail?size=400&id=1gRMfOlt98M5dmc-Ex5enZRFy7Bkkr9ta',
-		},
-		d10: { 
-			value: 10, 
-			label: 'D10', 
-			image: 'https://drive.google.com/thumbnail?size=400&id=1iwbOiPeNMREcQswWeLZ-dDJXzoaozVum',
-		},
-		d8: { 
-			value: 8, 
-			label: 'D8', 
-			image: 'https://drive.google.com/thumbnail?size=400&id=1LrjniIM1RG4u8as6hT5Pa-nS_1z0Bt5z',
-		},
-		d6: { 
-			value: 6, 
-			label: 'D6', 
-			image: 'https://drive.google.com/thumbnail?size=400&id=1KABrJFwctJG8JlLhL8ZXYIjj4-a2Gd64',
-		},
-		d4: { 
-			value: 4, 
-			label: 'D4', 
-			image: 'https://drive.google.com/thumbnail?size=400&id=1TywBsbvDZ8IMiz_7UNQJJS88FTd2kDTN',
-		},
-	};
 
 	for (die in dice) {
 		dieTypeInput.innerHTML += `<option value=${dice[die].value}>${dice[die].label}</option>`;
 		diceArea.innerHTML += `<img id="${die}" src='${dice[die].image}' height='80px' alt="${dice[die].label} die" />`;
 	}
+
+	numDiceInput.value = localStorage.get('numDice') || 1;
+	dieTypeInput.value = localStorage.get('dieType') || 20;
 
 	const d20 = document.getElementById('d20');
 	const d12 = document.getElementById('d12');
@@ -64,12 +67,12 @@ window.addEventListener('load', () => {
 	const d6 = document.getElementById('d6');
 	const d4 = document.getElementById('d4');
 
-  dice['d20'].obj = d20;
-  dice['d12'].obj = d12;
-  dice['d10'].obj = d10;
-  dice['d8'].obj = d8;
-  dice['d6'].obj = d6;
-  dice['d4'].obj = d4;
+	dice['d20'].obj = d20;
+	dice['d12'].obj = d12;
+	dice['d10'].obj = d10;
+	dice['d8'].obj = d8;
+	dice['d6'].obj = d6;
+	dice['d4'].obj = d4;
 
 	rollButton.addEventListener('click', event => {
 		event.preventDefault();
@@ -134,6 +137,8 @@ window.addEventListener('load', () => {
 		resultArea.style.fontSize = getFontSize(numDice, dieType, modeInput.value === 'normal');
 		singleTotalArea.style.display = modeInput.value === 'normal' ? 'block' : 'none';
 		doubleTotalArea.style.display = modeInput.value === 'normal' ? 'none' : 'block';
+		localStorage.setItem('numDice', numDice);
+		localStorage.setItem('dieType', dieType);
 	});
 	
 	function resetTotals() {
